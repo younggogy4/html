@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <title>Галерея картинок</title>
+    <style>
+        /* Стили для увеличенного изображения и кнопок */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #overlay img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+        .overlay-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .overlay-btn.prev {
+            left: 20px;
+        }
+        .overlay-btn.next {
+            right: 20px;
+        }
+    </style>
+</head>
+<body style="width: 80%">
+<header>
+    <a href="kittens.html" class="a-logo"><img src="img/logo.png" alt="Логотип сайта" class="logo"></a>
+    <nav>
+        <a href="Breeds.html">Породы</a>
+        <a href="facts.html" style="height: 100%">Факты</a>
+        <a href="age.html">Анатомия</a>
+        <div>
+            <a href="gallery.html" style="height: 100%;">Галерея</a>
+            <img src="img/window.png" alt="котики" style="width:100%; height: 40px">
+        </div>
+    </nav>
+</header>
+<main>
+    <marquee behavior="alternate" direction="right" style="margin-top: 50px;"><h1 class="gallery-hero">Галерея картинок</h1></marquee>
+
+    <div class="gallery">
+        <!-- Добавим класс 'gallery-image-zoom' для обработки события на JS -->
+        <img src="img/image-1.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-2.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-3.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-4.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-5.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-6.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-7.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-8.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-9.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+        <img src="img/image-10.jpg" alt="котик" class="gallery-image gallery-image-zoom">
+    </div>
+
+</main>
+<footer>
+    <a href="https://vk.com/leopold_ekb" style="width:100%; height:30px;">
+        "ООО" катитова22
+    </a>
+</footer>
+
+<!-- JavaScript для увеличенного изображения -->
+<script>
+    // Получаем все изображения в галерее
+    const images = document.querySelectorAll('.gallery-image-zoom');
+    // Создаем оверлей
+    const overlay = document.createElement('div');
+    overlay.setAttribute('id', 'overlay');
+    // Добавляем оверлей на страницу
+    document.body.appendChild(overlay);
+
+    let currentIndex = 0; // Индекс текущего изображения
+
+    // Перебираем все изображения и добавляем обработчик события на клик
+    images.forEach((image, index) => {
+        image.addEventListener('click', () => {
+            currentIndex = index; // Устанавливаем индекс текущего изображения
+            showImage(index); // Показываем выбранное изображение
+        });
+    });
+
+    function showImage(index) {
+        const img = new Image();
+        img.src = images[index].src;
+        overlay.innerHTML = '';
+        overlay.appendChild(img);
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Создаем кнопки для перелистывания изображений
+        const prevBtn = document.createElement('button');
+        prevBtn.setAttribute('class', 'overlay-btn prev');
+        prevBtn.textContent = '◄';
+        const nextBtn = document.createElement('button');
+        nextBtn.setAttribute('class', 'overlay-btn next');
+        nextBtn.textContent = '►';
+        // Добавляем кнопки на оверлей
+        overlay.appendChild(prevBtn);
+        overlay.appendChild(nextBtn);
+
+        // Скрываем кнопку "назад", если текущее изображение - первое
+        if (index === 0) {
+            prevBtn.style.display = 'none';
+        }
+
+        // Скрываем кнопку "вперед", если текущее изображение - последнее
+        if (index === images.length - 1) {
+            nextBtn.style.display = 'none';
+        }
+
+        // Обработчики событий для кнопок перелистывания
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        });
+
+        // Обработчик события для закрытия увеличенного изображения при клике на оверлей
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) {
+                overlay.style.display = 'none';
+                document.body.style.overflow = ''; // Восстанавливаем прокрутку страницы
+            }
+        });
+    }
+</script>
+</body>
+</html>
